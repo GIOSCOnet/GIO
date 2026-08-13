@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    ) 사이에 복사한 메타 태그를 붙여넣으세요.  -->
+    <title>지오스코 | GIOSCO</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 15px 60px 15px;
+            position: relative;
+        }
+
+        /* 언어 선택 스위치 (최상단 좌측) */
+        .lang-switch {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .lang-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lang-btn.active {
+            background: #2b6cb0;
+            color: #ffffff;
+            border-color: #2b6cb0;
+        }
+
+        /* 메인 헤더 영역 */
+        header {
+            text-align: center;
+            margin: 40px 0 25px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #1a202c;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        header .slogan {
+            font-size: 1.2rem;
+            color: #2b6cb0;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        header .sub-desc {
+            font-size: 1rem;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        /* 버튼 컨테이너 */
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 15px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 0;
+            font-size: 1.05rem;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-mobile { background-color: #3182ce; }
+        .btn-pc { background-color: #2b6cb0; }
+        .btn-cafe { background-color: #03c75a; }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        /* 안내 문구 상자 */
+        .guide-box {
+            width: 100%;
+            max-width: 500px;
+            background-color: #edf2f7;
+            border-left: 4px solid #3182ce;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 15px;
+            margin-bottom: 35px;
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        /* 공지사항 영역 */
+        .notice-section {
+            width: 100%;
+            max-width: 900px;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 35px;
+        }
+
+        .notice-section h2 {
+            font-size: 1.3rem;
+            color: #2d3748;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 10px;
+        }
+
+        .notice-list {
+            list-style: none;
+        }
+
+        .notice-item {
+            padding: 14px 10px;
+            border-bottom: 1px solid #edf2f7;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-radius: 6px;
+        }
+
+        .notice-item:hover {
+            background-color: #f7fafc;
+        }
+
+        .notice-item:last-child {
+            border-bottom: none;
+        }
+
+        .notice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notice-title {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1.05rem;
+        }
+
+        .notice-date {
+            color: #a0aec0;
+            font-size: 0.85rem;
+        }
+
+        .notice-preview {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-top: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 공지사항 상세보기 팝업 모달 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            width: 100%;
+            max-width: 600px;
+            max-height: 80vh;
+            border-radius: 12px;
+            padding: 24px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            color: #1a202c;
+            margin-bottom: 6px;
+        }
+
+        .modal-date {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 10px;
+        }
+
+        .modal-body {
+            font-size: 1rem;
+            color: #4a5568;
+            line-height: 1.6;
+            white-space: pre-line;
+            margin-bottom: 20px;
+        }
+
+        .modal-img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .modal-close-btn {
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            float: right;
+        }
+
+        /* 관리자 패널 */
+        .admin-footer {
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .admin-toggle-btn {
+            background: none;
+            border: 1px solid #cbd5e0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #718096;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .admin-panel {
+            display: none;
+            width: 100%;
+            max-width: 900px;
+            background: #edf2f7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .admin-panel h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #4a5568;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .admin-btn {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .admin-btn:hover {
+            background: #2d3748;
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 600px) {
+            .btn-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="lang-switch">
+        <button class="lang-btn active" id="btn-ko" onclick="setLanguage('ko')">한국어</button>
+        <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">ENG</button>
+    </div>
+
+    <header>
+        <h1 data-i18n="title">지오스코</h1>
+        <p class="slogan" data-i18n="slogan">생활을 즐겁게 지오스코</p>
+        <p class="sub-desc" data-i18n="desc1">지오스코의 다양한 서비스를 만나보세요.</p>
+        <p class="sub-desc" data-i18n="desc2">지오스코의 무료 서비스를 이용해 보세요.</p>
+    </header>
+
+    <div class="btn-container">
+        <div class="btn-row">
+            <a href="https://giosco.my.canva.site/" class="btn btn-mobile" target="_blank" data-i18n="btnMobile">📱 핸드폰 버전</a>
+            <a href="https://giosco.my.canva.site/pc" class="btn btn-pc" target="_blank" data-i18n="btnPc">💻 PC 버전</a>
+        </div>
+        <a href="https://cafe.naver.com/central1995" class="btn btn-cafe" target="_blank" data-i18n="btnCafe">☕ 네이버 카페 지오스코 바로가기</a>
+    </div>
+
+    <div class="guide-box">
+        💡 <span data-i18n="guideText">지오스코 홈페이지 버전을 선택하세요. PC 버전에서는 협력업체 바로가기 기능이 없습니다. 이점 양해바랍니다.홈페이지 광고 문의는 d7801176@gmail.com 으로 부탁드립니다.</span>
+    </div>
+
+    <section class="notice-section">
+        <h2 data-i18n="noticeHeader">📢 공지사항</h2>
+        <ul class="notice-list" id="noticeList">
+            </ul>
+    </section>
+
+    <div class="modal-overlay" id="noticeModal">
+        <div class="modal-content">
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-date" id="modalDate"></div>
+            <div class="modal-body" id="modalBody"></div>
+            <div id="modalImgContainer"></div>
+            <button class="modal-close-btn" onclick="closeModal()" data-i18n="closeBtn">닫기</button>
+        </div>
+    </div>
+
+    <div class="admin-footer">
+        <button class="admin-toggle-btn" onclick="toggleAdmin()" data-i18n="adminModeBtn">⚙️ 관리자 모드</button>
+        
+        <div class="admin-panel" id="adminPanel">
+            <h3 data-i18n="adminNoticeTitle">📢 새 공지사항 등록</h3>
+            <div class="form-group">
+                <label data-i18n="adminNoticeInputTitle">제목</label>
+                <input type="text" id="noticeTitleInput" placeholder="제목을 입력하세요">
+            </div>
+            <div class="form-group">
+                <label data-i18n="adminNoticeInputContent">내용</label>
+                <textarea id="noticeContentInput" rows="4" placeholder="내용을 입력하세요"></textarea>
+            </div>
+            <div class="form-group">
+                <label data-i18n="adminNoticeInputImg">사진 첨부 (갤러리에서 선택)</label>
+                <input type="file" id="noticeImgInput" accept="image/*">
+            </div>
+            <button class="admin-btn" onclick="addNotice()" data-i18n="adminNoticeSubmit">공지 등록하기</button>
+
+            <hr style="margin: 20px 0; border: none; border-top: 1px solid #cbd5e0;">
+
+            <h3 data-i18n="adminCodeTitle">🔑 관리자 코드 변경</h3>
+            <div class="form-group">
+                <label data-i18n="adminCodeCurrent">현재 관리자 코드</label>
+                <input type="password" id="currentCodeInput" placeholder="현재 코드를 입력하세요">
+            </div>
+            <div class="form-group">
+                <label data-i18n="adminCodeNew">새로운 관리자 코드</label>
+                <input type="password" id="newCodeInput" placeholder="새 코드를 입력하세요">
+            </div>
+            <button class="admin-btn" onclick="changeAdminCode()" data-i18n="adminCodeSubmit">코드 변경하기</button>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_ADMIN_CODE = "sksajtwu!!10";
+        let isAdminLoggedIn = false;
+        let currentLang = 'ko';
+
+        function getAdminCode() {
+            return localStorage.getItem('giosco_admin_code') || DEFAULT_ADMIN_CODE;
+        }
+
+        // 언어 텍스트 정의
+        const i18n = {
+            ko: {
+                title: "지오스코",
+                slogan: "생활을 즐겁게 지오스코",
+                desc1: "지오스코의 다양한 서비스를 만나보세요.",
+                desc2: "지오스코의 무료 서비스를 이용해 보세요.",
+                btnMobile: "📱 핸드폰 버전",
+                btnPc: "💻 PC 버전",
+                btnCafe: "☕ 네이버 카페 지오스코 바로가기",
+                guideText: "지오스코 홈페이지 버전을 선택하세요. PC 버전에서는 협력업체 바로가기 기능이 없습니다. 이점 양해바랍니다.",
+                noticeHeader: "📢 공지사항",
+                emptyNotice: "등록된 공지사항이 없습니다.",
+                closeBtn: "닫기",
+                adminModeBtn: "⚙️ 관리자 모드",
+                adminNoticeTitle: "📢 새 공지사항 등록",
+                adminNoticeInputTitle: "제목",
+                adminNoticeInputContent: "내용",
+                adminNoticeInputImg: "사진 첨부 (갤러리에서 선택)",
+                adminNoticeSubmit: "공지 등록하기",
+                adminCodeTitle: "🔑 관리자 코드 변경",
+                adminCodeCurrent: "현재 관리자 코드",
+                adminCodeNew: "새로운 관리자 코드",
+                adminCodeSubmit: "코드 변경하기",
+                promptAdmin: "관리자 코드를 입력해주세요:",
+                alertSuccess: "관리자 인증 성공!",
+                alertFail: "관리자 코드가 일치하지 않습니다.",
+                alertTitleReq: "제목을 입력해주세요.",
+                alertNoticeAdded: "공지사항이 등록되었습니다!",
+                alertCodeChanged: "관리자 코드가 성공적으로 변경되었습니다!"
+            },
+            en: {
+                title: "GIOSCO",
+                slogan: "Make Life Enjoyable, GIOSCO",
+                desc1: "Discover various services from GIOSCO.",
+                desc2: "Try GIOSCO's free services.",
+                btnMobile: "📱 Mobile Version",
+                btnPc: "💻 PC Version",
+                btnCafe: "☕ GIOSCO Naver Cafe",
+                guideText: "Please select the GIOSCO website version. Please note that the PC version does not support the partner shortcut feature.",
+                noticeHeader: "📢 Announcements",
+                emptyNotice: "No announcements registered.",
+                closeBtn: "Close",
+                adminModeBtn: "⚙️ Admin Mode",
+                adminNoticeTitle: "📢 Post New Announcement",
+                adminNoticeInputTitle: "Title",
+                adminNoticeInputContent: "Content",
+                adminNoticeInputImg: "Attach Photo (Select from Gallery)",
+                adminNoticeSubmit: "Post Announcement",
+                adminCodeTitle: "🔑 Change Admin Code",
+                adminCodeCurrent: "Current Admin Code",
+                adminCodeNew: "New Admin Code",
+                adminCodeSubmit: "Change Code",
+                promptAdmin: "Please enter the admin code:",
+                alertSuccess: "Admin authentication successful!",
+                alertFail: "Admin code does not match.",
+                alertTitleReq: "Please enter a title.",
+                alertNoticeAdded: "Announcement posted successfully!",
+                alertCodeChanged: "Admin code changed successfully!"
+            }
+        };
+
+        window.onload = function() {
+            loadNotices();
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            
+            document.getElementById('btn-ko').classList.toggle('active', lang === 'ko');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) {
+                    el.textContent = i18n[lang][key];
+                }
+            });
+
+            loadNotices();
+        }
+
+        function toggleAdmin() {
+            if (!isAdminLoggedIn) {
+                const inputCode = prompt(i18n[currentLang].promptAdmin);
+                if (inputCode === getAdminCode()) {
+                    alert(i18n[currentLang].alertSuccess);
+                    isAdminLoggedIn = true;
+                    document.getElementById('adminPanel').style.display = 'block';
+                } else if (inputCode !== null) {
+                    alert(i18n[currentLang].alertFail);
+                }
+            } else {
+                document.getElementById('adminPanel').style.display = 'block';
+            }
+        }
+
+        function changeAdminCode() {
+            const currentInput = document.getElementById('currentCodeInput').value;
+            const newInput = document.getElementById('newCodeInput').value.trim();
+
+            if (currentInput !== getAdminCode()) {
+                alert(i18n[currentLang].alertFail);
+                return;
+            }
+
+            if (!newInput) {
+                alert('새로운 관리자 코드를 입력해주세요.');
+                return;
+            }
+
+            localStorage.setItem('giosco_admin_code', newInput);
+            document.getElementById('currentCodeInput').value = '';
+            document.getElementById('newCodeInput').value = '';
+            alert(i18n[currentLang].alertCodeChanged);
+        }
+
+        // 공지사항 목록 로드
+        function loadNotices() {
+            const notices = JSON.parse(localStorage.getItem('giosco_notices') || '[]');
+            const listEl = document.getElementById('noticeList');
+            
+            if (notices.length === 0) {
+                listEl.innerHTML = `<li class="notice-item" style="cursor:default;"><div class="notice-title">${i18n[currentLang].emptyNotice}</div></li>`;
+                return;
+            }
+
+            listEl.innerHTML = notices.map((notice, index) => `
+                <li class="notice-item" onclick="openModal(${index})">
+                    <div class="notice-header">
+                        <span class="notice-title">${notice.title}</span>
+                        <span class="notice-date">${notice.date}</span>
+                    </div>
+                    <div class="notice-preview">${notice.content || ''}</div>
+                </li>
+            `).join('');
+        }
+
+        // 공지사항 상세보기 모달 열기
+        function openModal(index) {
+            const notices = JSON.parse(localStorage.getItem('giosco_notices') || '[]');
+            const notice = notices[index];
+
+            if (!notice) return;
+
+            document.getElementById('modalTitle').textContent = notice.title;
+            document.getElementById('modalDate').textContent = notice.date;
+            document.getElementById('modalBody').textContent = notice.content || '';
+
+            const imgContainer = document.getElementById('modalImgContainer');
+            if (notice.img) {
+                imgContainer.innerHTML = `<img src="${notice.img}" class="modal-img">`;
+            } else {
+                imgContainer.innerHTML = '';
+            }
+
+            document.getElementById('noticeModal').style.display = 'flex';
+        }
+
+        // 공지사항 모달 닫기
+        function closeModal() {
+            document.getElementById('noticeModal').style.display = 'none';
+        }
+
+        // 모달 외부 클릭 시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('noticeModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        // 공지사항 추가
+        function addNotice() {
+            const title = document.getElementById('noticeTitleInput').value.trim();
+            const content = document.getElementById('noticeContentInput').value.trim();
+            const imgFile = document.getElementById('noticeImgInput').files[0];
+
+            if (!title) {
+                alert(i18n[currentLang].alertTitleReq);
+                return;
+            }
+
+            const today = new Date();
+            const dateStr = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
+
+            const saveNoticeData = (imageData) => {
+                const notices = JSON.parse(localStorage.getItem('giosco_notices') || '[]');
+                notices.unshift({
+                    title: title,
+                    content: content,
+                    date: dateStr,
+                    img: imageData
+                });
+                localStorage.setItem('giosco_notices', JSON.stringify(notices));
+                
+                document.getElementById('noticeTitleInput').value = '';
+                document.getElementById('noticeContentInput').value = '';
+                document.getElementById('noticeImgInput').value = '';
+                loadNotices();
+                alert(i18n[currentLang].alertNoticeAdded);
+            };
+
+            if (imgFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    saveNoticeData(e.target.result);
+                };
+                reader.readAsDataURL(imgFile);
+            } else {
+                saveNoticeData(null);
+            }
+        }
+    </script>
+</body>
+</html>
+
+</html>
